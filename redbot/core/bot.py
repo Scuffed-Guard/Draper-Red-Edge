@@ -228,7 +228,7 @@ class RedBase(
         self._ignored_cache = IgnoreManager(self._config)
         self._whiteblacklist_cache = WhitelistBlacklistManager(self._config)
         self._i18n_cache = I18nManager(self._config)
-        self._bypass_cooldowns = False
+        self._bypass_cooldowns = True
 
         async def prefix_manager(bot, message) -> List[str]:
             prefixes = await self._prefix_cache.get_prefixes(message.guild)
@@ -239,11 +239,11 @@ class RedBase(
         if "command_prefix" not in kwargs:
             kwargs["command_prefix"] = prefix_manager
 
-        if "intents" not in kwargs:
-            intents = discord.Intents.all()
-            for intent_name in cli_flags.disable_intent:
-                setattr(intents, intent_name, False)
-            kwargs["intents"] = intents
+        intents = discord.Intents.all()
+        intents.presences = False
+        for intent_name in cli_flags.disable_intent:
+            setattr(intents, intent_name, False)
+        kwargs["intents"] = intents
 
         # This keeps track of owners with elevated privileges in the different contexts.
         # This is `None` if sudo functionality is disabled.
