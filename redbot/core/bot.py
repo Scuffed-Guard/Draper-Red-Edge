@@ -240,7 +240,7 @@ class RedBase(
             kwargs["command_prefix"] = prefix_manager
 
         intents = discord.Intents.all()
-        intents.presences = False
+        # intents.presences = False
         for intent_name in cli_flags.disable_intent:
             setattr(intents, intent_name, False)
         kwargs["intents"] = intents
